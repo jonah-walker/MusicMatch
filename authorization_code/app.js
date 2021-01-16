@@ -127,7 +127,7 @@ app.get('/callback', function(req, res) {
                     userInfo.userId = body.id
                     userInfo.href = body.href
                     userInfo.userName = body.display_name
-                    userInfo.userInfo = body.images[0].url
+                    userInfo.userImage = body.images[0].url
                 });
 
 
