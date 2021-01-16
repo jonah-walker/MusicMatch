@@ -23,7 +23,14 @@ var userInfo = {
     genres: new List(),
     songIds: new List(),
     artistIds: new List(),
-    userId: ""
+    userId: "",
+    userDance: 0.0,
+    userAcoust: 0.0,
+    userEnergy: 0.0,
+    userValence: 0.0,
+    userInstrument: 0.0,
+    userSpeech: 0.0
+
 };
 
 /**
@@ -136,30 +143,60 @@ app.get('/callback', function(req, res) {
 
                 let myFirstPromise = new Promise((resolve, reject) => {
                     // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-                    // In this example, we use setTimeout(...) to simulate async code.
                     // In reality, you will probably be using something like XHR or an HTML5 API.
-                    
-                        request.get(options, function(error, response, body) {
-                            body.items.forEach(function(item) {
-                                // console.log(item.name)
-                                // console.log(item.id)
-                                userInfo.songIds.push(item.id)
-                            });
-                            resolve("Success!") // Yay! Everything went well!
+
+                    request.get(options, function(error, response, body) {
+                        body.items.forEach(function(item) {
+                            // console.log(item.name)
+                            // console.log(item.id)
+                            userInfo.songIds.push(item.id)
                         });
+                        resolve("Success!") // Yay! Everything went well!
+                    });
                 })
 
                 myFirstPromise.then((successMessage) => {
-                    userInfo.songIds.forEach(function(songID) {
-                        console.log(songID)
-                        options.url = 'https://api.spotify.com/v1/audio-features/' + songID;
-                        request.get(options, function(error, response, body) {
-                            console.log(body);
+                    var nOfSongs = 0;
+                    let mySecondPromise = new Promise((resolve, reject) => {
+                        userInfo.songIds.forEach(function(songID) {
+                            nOfSongs++;
+                            //console.log(songID)
+                            options.url = 'https://api.spotify.com/v1/audio-features/' + songID;
+                            request.get(options, function(error, response, body) {
+                                // console.log(body);
+                                console.log(body.energy)
+                                userInfo.userAcoust += body.acousticness
+                                userInfo.userDance += body.danceability
+                                userInfo.userEnergy += body.energy
+                                userInfo.userSpeech += body.speechiness
+                                userInfo.userInstrument += body.instrumentalness
+                                userInfo.userValence += body.valence
+                            });
                         });
+                        resolve("Success")
                     });
+
+
+
+                    mySecondPromise.then((successMessage) => {
+                        console.log("sjadhaksd " + nOfSongs)
+                        console.log(userInfo)
+
+                        userInfo.userAcoust /= nOfSongs
+                        userInfo.userDance /= nOfSongs
+                        userInfo.userEnergy /= nOfSongs
+                        userInfo.userSpeech /= nOfSongs
+                        userInfo.userInstrument /= nOfSongs
+                        userInfo.userValence /= nOfSongs
+
+                        console.log(userInfo.userSpeech);
+
+                    });
+
+
                     // successMessage is whatever we passed in the resolve(...) function above.
                     // It doesn't have to be a string, but if it is only a succeed message, it probably will be.
-                    console.log("Yay! " + successMessage)
+                    //console.log("Yay! " + successMessage)
                 });
 
 
