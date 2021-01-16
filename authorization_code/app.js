@@ -12,7 +12,7 @@ var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
-const { link } = require('fs');
+const { link, promises } = require('fs');
 
 var client_id = '9667fe86430a494381408e97322a3bcb'; // Your client id
 var client_secret = '90433ff24ae8495c860b16131d6c826e'; // Your secret
@@ -158,22 +158,26 @@ app.get('/callback', function(req, res) {
                 myFirstPromise.then((successMessage) => {
                     var nOfSongs = 0;
                     let mySecondPromise = new Promise((resolve, reject) => {
-                        userInfo.songIds.forEach(function(songID) {
+                        let promises = userInfo.songIds.map(function(songID) {
                             nOfSongs++;
                             //console.log(songID)
                             options.url = 'https://api.spotify.com/v1/audio-features/' + songID;
-                            request.get(options, function(error, response, body) {
-                                // console.log(body);
-                                console.log(body.energy)
-                                userInfo.userAcoust += body.acousticness
-                                userInfo.userDance += body.danceability
-                                userInfo.userEnergy += body.energy
-                                userInfo.userSpeech += body.speechiness
-                                userInfo.userInstrument += body.instrumentalness
-                                userInfo.userValence += body.valence
+                            let reqPromise = new Promise((resolve, reject) => {
+                                request.get(options, function(error, response, body) {
+                                    // console.log(body);
+                                    console.log(body.energy)
+                                    userInfo.userAcoust += body.acousticness
+                                    userInfo.userDance += body.danceability
+                                    userInfo.userEnergy += body.energy
+                                    userInfo.userSpeech += body.speechiness
+                                    userInfo.userInstrument += body.instrumentalness
+                                    userInfo.userValence += body.valence
+                                    resolve("Success!")
+                                });
                             });
+                            return reqPromise
                         });
-                        resolve("Success")
+                        Promise.all(promises).then(() => resolve("Success"))
                     });
 
 
@@ -189,7 +193,7 @@ app.get('/callback', function(req, res) {
                         userInfo.userInstrument /= nOfSongs
                         userInfo.userValence /= nOfSongs
 
-                        console.log(userInfo.userSpeech);
+                        console.log(userInfo)
 
                     });
 
