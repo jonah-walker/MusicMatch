@@ -21,7 +21,7 @@ var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
 var userInfo = {
     genres: new List(),
-    songIds: new List(),
+    songIds: new List([1]),
     artistIds: new List(),
     userId: ""
 };
@@ -111,12 +111,13 @@ app.get('/callback', function(req, res) {
                     json: true
                 };
 
-                // use the access token to access the Spotify Web API
+
+
                 request.get(options, function(error, response, body) {
                     body.items.forEach(function(item) {
-                        console.log(item.name)
-                        console.log(item.id)
-                        console.log(item.genres)
+                        //console.log(item.name)
+                        //console.log(item.id)
+                        //console.log(item.genres)
 
                         // userInfo.genres.push(item.genres)
                         userInfo.artistIds.push(item.id)
@@ -127,22 +128,49 @@ app.get('/callback', function(req, res) {
 
                     });
 
-                    console.log(userInfo.genres.toArray())
-                    console.log(userInfo.artistIds.toArray())
+                    //console.log(userInfo.genres.toArray())
+                    //console.log(userInfo.artistIds.toArray())
                 });
 
                 options.url = 'https://api.spotify.com/v1/me/top/tracks';
 
-                request.get(options, function(error, response, body) {
-                    body.items.forEach(function(item) {
-                        console.log(item.name)
-                        console.log(item.id)
+                let myFirstPromise = new Promise((resolve, reject) => {
+                    // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+                    // In this example, we use setTimeout(...) to simulate async code.
+                    // In reality, you will probably be using something like XHR or an HTML5 API.
+                    setTimeout(function() {
+                        request.get(options, function(error, response, body) {
+                            body.items.forEach(function(item) {
+                                //console.log(item.name)
+                                //console.log(item.id)
+                                userInfo.songIds.push(item.id)
+                            });
+                        });
+                        resolve("Success!") // Yay! Everything went well!
+                    }, 250)
+                })
 
-                        // userInfo.genres.push(item.genres)
-                        userInfo.songIds.push(item.id)
-                    });
+
+                myFirstPromise.then((successMessage) => {
                     console.log(userInfo.songIds.toArray())
+                    userInfo.songIds.forEach(function(songID) {
+                        console.log("BAJSDKSHDKSJD")
+                        console.log(userInfo.songIds.toArray())
+                        console.log(songID)
+                        options.url = 'https://api.spotify.com/v1/audio-features/' + songID;
+                        request.get(options, function(error, response, body) {
+                            console.log(body);
+                        });
+                    });
+                    // successMessage is whatever we passed in the resolve(...) function above.
+                    // It doesn't have to be a string, but if it is only a succeed message, it probably will be.
+                    console.log("Yay! " + successMessage)
                 });
+
+
+
+
+
 
                 // we can also pass the token to the browser to make requests from there
                 res.redirect('/#' +
