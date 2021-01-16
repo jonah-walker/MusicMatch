@@ -6,7 +6,7 @@
  * For more information, read
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
-
+var List = require("collections/list");
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var cors = require('cors');
@@ -18,11 +18,23 @@ var client_id = '9667fe86430a494381408e97322a3bcb'; // Your client id
 var client_secret = '90433ff24ae8495c860b16131d6c826e'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
+
+var userInfo = {
+    genres: new List(),
+    songIds: new List(),
+    artistIds: new List(),
+    userId: ""
+};
+
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
  * @return {string} The generated string
  */
+
+
+
+
 var generateRandomString = function(length) {
     var text = '';
     var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -101,14 +113,29 @@ app.get('/callback', function(req, res) {
 
                 // use the access token to access the Spotify Web API
                 request.get(options, function(error, response, body) {
-                    console.log(body);
+                    body.items.forEach(function(item) {
+                        console.log(item.name)
+                        console.log(item.id)
+                        console.log(item.genres)
+
+                        // userInfo.genres.push(item.genres)
+                        userInfo.artistIds.push(item.id)
+
+                        item.genres.forEach(function(genre) {
+                            userInfo.genres.push(genre)
+                        });
+
+                    });
+
+                    console.log(userInfo.genres.toArray())
+                    console.log(userInfo.artistIds.toArray())
                 });
 
-                options.url = 'https://api.spotify.com/v1/me/top/tracks';
+                // options.url = 'https://api.spotify.com/v1/me/top/tracks';
 
-                request.get(options, function(error, response, body) {
-                    console.log(body);
-                });
+                // request.get(options, function(error, response, body) {
+                //     console.log(body);
+                // });
 
                 // we can also pass the token to the browser to make requests from there
                 res.redirect('/#' +
