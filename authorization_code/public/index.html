@@ -43,11 +43,11 @@
             <div class="media-body">
                 <dl class="dl-horizontal">
                     <dt>Display name</dt>
-                    <dd class="clearfix">{{items.0.name}}</dd>
+                    <dd class="clearfix">{{display_name}}</dd>
                     <dt>Id</dt>
-                    <dd>{{items.0.id}}</dd>
+                    <dd>{{id}}</dd>
                     <dt>Profile Image</dt>
-                    <dd class="clearfix"><img src="{{items.0.images.0.url}}" width="40px" height="40px"></dd>
+                    <dd class="clearfix"><img src="{{images.0.url}}" width="40px" height="40px"></dd>
                 </dl>
             </div>
         </div>
@@ -107,7 +107,7 @@
                     });
 
                     $.ajax({
-                        url: 'https://api.spotify.com/v1/me/top/artists',
+                        url: 'https://api.spotify.com/v1/me/',
                         headers: {
                             'Authorization': 'Bearer ' + access_token
                         },

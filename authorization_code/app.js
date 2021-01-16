@@ -24,6 +24,9 @@ var userInfo = {
     songIds: new List(),
     artistIds: new List(),
     userId: "",
+    userName: "",
+    href: "",
+    userImage: "",
     userDance: 0.0,
     userAcoust: 0.0,
     userEnergy: 0.0,
@@ -111,7 +114,7 @@ app.get('/callback', function(req, res) {
 
                 var access_token = body.access_token,
                     refresh_token = body.refresh_token;
-                var link = 'https://api.spotify.com/v1/me/top/artists';
+                var link = 'https://api.spotify.com/v1/me/';
                 var options = {
                     url: link,
                     headers: { 'Authorization': 'Bearer ' + access_token },
@@ -119,6 +122,16 @@ app.get('/callback', function(req, res) {
                 };
 
 
+
+                request.get(options, function(error, response, body) {
+                    userInfo.userId = body.id
+                    userInfo.href = body.href
+                    userInfo.userName = body.display_name
+                    userInfo.userInfo = body.images[0].url
+                });
+
+
+                options.url = 'https://api.spotify.com/v1/me/top/artists'
 
                 request.get(options, function(error, response, body) {
                     body.items.forEach(function(item) {
@@ -180,8 +193,6 @@ app.get('/callback', function(req, res) {
                         Promise.all(promises).then(() => resolve("Success"))
                     });
 
-
-
                     mySecondPromise.then((successMessage) => {
                         console.log("sjadhaksd " + nOfSongs)
                         console.log(userInfo)
@@ -194,7 +205,6 @@ app.get('/callback', function(req, res) {
                         userInfo.userValence /= nOfSongs
 
                         console.log(userInfo)
-
                     });
 
 
