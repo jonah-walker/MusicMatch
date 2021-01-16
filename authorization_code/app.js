@@ -32,7 +32,8 @@ var userInfo = {
     userEnergy: 0.0,
     userValence: 0.0,
     userInstrument: 0.0,
-    userSpeech: 0.0
+    userSpeech: 0.0,
+    country: ""
 
 };
 
@@ -125,9 +126,10 @@ app.get('/callback', function(req, res) {
 
                 request.get(options, function(error, response, body) {
                     userInfo.userId = body.id
-                    userInfo.href = body.href
+                    userInfo.href = body.external_urls.spotify
                     userInfo.userName = body.display_name
                     userInfo.userImage = body.images[0].url
+                    userInfo.country = body.country
                 });
 
 
@@ -178,7 +180,6 @@ app.get('/callback', function(req, res) {
                             let reqPromise = new Promise((resolve, reject) => {
                                 request.get(options, function(error, response, body) {
                                     // console.log(body);
-                                    console.log(body.energy)
                                     userInfo.userAcoust += body.acousticness
                                     userInfo.userDance += body.danceability
                                     userInfo.userEnergy += body.energy
@@ -194,8 +195,7 @@ app.get('/callback', function(req, res) {
                     });
 
                     mySecondPromise.then((successMessage) => {
-                        console.log("sjadhaksd " + nOfSongs)
-                        console.log(userInfo)
+
 
                         userInfo.userAcoust /= nOfSongs
                         userInfo.userDance /= nOfSongs
