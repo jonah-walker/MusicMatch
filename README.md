@@ -3,7 +3,7 @@
 Want to get matched with someone who has the same music taste as you? 🎵
 The best way to get paired with friends, colleagues or friendly strangers who have similar music tastes! ✨
 
-# Our Design
+# Our Design 🎨
 
 We created our platform using the Spotify API and Node
 
