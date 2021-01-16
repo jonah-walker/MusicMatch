@@ -131,11 +131,18 @@ app.get('/callback', function(req, res) {
                     console.log(userInfo.artistIds.toArray())
                 });
 
-                // options.url = 'https://api.spotify.com/v1/me/top/tracks';
+                options.url = 'https://api.spotify.com/v1/me/top/tracks';
 
-                // request.get(options, function(error, response, body) {
-                //     console.log(body);
-                // });
+                request.get(options, function(error, response, body) {
+                    body.items.forEach(function(item) {
+                        console.log(item.name)
+                        console.log(item.id)
+
+                        // userInfo.genres.push(item.genres)
+                        userInfo.songIds.push(item.id)
+                    });
+                    console.log(userInfo.songIds.toArray())
+                });
 
                 // we can also pass the token to the browser to make requests from there
                 res.redirect('/#' +
