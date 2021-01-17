@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Example of the Authorization Code flow with Spotify</title>
+    <title>MusicMatch</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style type="text/css">
         #login,
@@ -31,7 +31,7 @@
             </div>
             <div id="oauth">
             </div>
-            <button class="btn btn-default" id="obtain-new-token">Get Music Information</button>
+            <a href="/yourinfo.html" class="btn btn-default" id="obtain-new-token">Get Music Information</a>
         </div>
     </div>
 
@@ -41,13 +41,13 @@
             <div class="pull-left">
                 <img class="media-object" width="150" src="{{images.0.url}}" />
             </div>
-            <div class="media-body">
+            <!-- <div class="media-body">
                 <dl class="dl-horizontal">
                     <dt>Display name</dt>
                     <dd class="clearfix">{{display_name}}</dd>
                     <dt>Profile Image</dt>
                 </dl>
-            </div>
+            </div> -->
         </div>
     </script>
 
@@ -66,6 +66,24 @@
             </div>
         </div>
     </script>
+
+    <!-- <script id="user-activity-template">
+        <div class="media">
+          <div class="pull-left">
+              <img class="media-object" width="150" src="{{images.0.url}}" />
+          </div>
+          <div class="media-body">
+              <dl class="dl-horizontal">
+                  <dt>Display name</dt>
+                  <dd class="clearfix">{{display_name}}</dd>
+                  <dt>Spotify Account</dt>
+                  <dd class="clearfix">{{external_urls.spotify}}</dd>
+                  <dt>Country: </dt>
+                  <dd class="clearfix">{{country}}</dd>
+              </dl>
+          </div>
+      </div>
+  </script> -->
 
     <script id="oauth-template" type="text/x-handlebars-template">
         <h2>oAuth info</h2>
@@ -150,6 +168,7 @@
                         //     access_token: access_token,
                         //     refresh_token: refresh_token
                         // });
+                        console.log("pushed")
                     });
                 }, false);
             }
