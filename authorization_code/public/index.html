@@ -115,10 +115,10 @@
             } else {
                 if (access_token) {
                     // render oauth info
-                    oauthPlaceholder.innerHTML = oauthTemplate({
-                        access_token: access_token,
-                        refresh_token: refresh_token
-                    });
+                    // oauthPlaceholder.innerHTML = oauthTemplate({
+                    //     access_token: access_token,
+                    //     refresh_token: refresh_token
+                    // });
 
                     $.ajax({
                         url: 'https://api.spotify.com/v1/me/',
@@ -146,10 +146,10 @@
                         }
                     }).done(function(data) {
                         access_token = data.access_token;
-                        oauthPlaceholder.innerHTML = oauthTemplate({
-                            access_token: access_token,
-                            refresh_token: refresh_token
-                        });
+                        // oauthPlaceholder.innerHTML = oauthTemplate({
+                        //     access_token: access_token,
+                        //     refresh_token: refresh_token
+                        // });
                     });
                 }, false);
             }
