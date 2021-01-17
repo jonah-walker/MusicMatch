@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Example of the Authorization Code flow with Spotify</title>
+    <title>MusicMatch</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style type="text/css">
         #login,
@@ -22,7 +22,8 @@
 <body>
     <div class="container">
         <div id="login">
-            <h1>This is an example of the Authorization Code flow</h1>
+            <h1>Welcome to MusicMatch</h1>
+            <p>Click the button below to login to Spotify</p>
             <a href="/login" class="btn btn-primary">Log in with Spotify</a>
         </div>
         <div id="loggedin">
@@ -30,13 +31,29 @@
             </div>
             <div id="oauth">
             </div>
-            <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+            <a href="/yourinfo.html" class="btn btn-default" id="obtain-new-token">Get Music Information</a>
         </div>
     </div>
 
     <script id="user-profile-template" type="text/x-handlebars-template">
-        <h1>Logged in as {{display_name}}</h1>
+        <h1>Welcome {{display_name}}</h1>
         <div class="media">
+            <div class="pull-left">
+                <img class="media-object" width="150" src="{{images.0.url}}" />
+            </div>
+            <!-- <div class="media-body">
+                <dl class="dl-horizontal">
+                    <dt>Display name</dt>
+                    <dd class="clearfix">{{display_name}}</dd>
+                    <dt>Profile Image</dt>
+                </dl>
+            </div> -->
+        </div>
+    </script>
+
+<!-- Use this template below for stuff like top artist and top listneed track -->
+    <script id="user-activity-template">
+          <div class="media">
             <div class="pull-left">
                 <img class="media-object" width="150" src="{{images.0.url}}" />
             </div>
@@ -44,14 +61,29 @@
                 <dl class="dl-horizontal">
                     <dt>Display name</dt>
                     <dd class="clearfix">{{display_name}}</dd>
-                    <dt>Id</dt>
-                    <dd>{{id}}</dd>
                     <dt>Profile Image</dt>
-                    <dd class="clearfix"><img src="{{images.0.url}}" width="40px" height="40px"></dd>
                 </dl>
             </div>
         </div>
     </script>
+
+    <!-- <script id="user-activity-template">
+        <div class="media">
+          <div class="pull-left">
+              <img class="media-object" width="150" src="{{images.0.url}}" />
+          </div>
+          <div class="media-body">
+              <dl class="dl-horizontal">
+                  <dt>Display name</dt>
+                  <dd class="clearfix">{{display_name}}</dd>
+                  <dt>Spotify Account</dt>
+                  <dd class="clearfix">{{external_urls.spotify}}</dd>
+                  <dt>Country: </dt>
+                  <dd class="clearfix">{{country}}</dd>
+              </dl>
+          </div>
+      </div>
+  </script> -->
 
     <script id="oauth-template" type="text/x-handlebars-template">
         <h2>oAuth info</h2>
@@ -70,7 +102,7 @@
 
             /**
              * Obtains parameters from the hash of the URL
-             * @return Object
+             * @return Object   
              */
             function getHashParams() {
                 var hashParams = {};
@@ -86,9 +118,9 @@
                 userProfileTemplate = Handlebars.compile(userProfileSource),
                 userProfilePlaceholder = document.getElementById('user-profile');
 
-            var oauthSource = document.getElementById('oauth-template').innerHTML,
-                oauthTemplate = Handlebars.compile(oauthSource),
-                oauthPlaceholder = document.getElementById('oauth');
+            // var oauthSource = document.getElementById('oauth-template').innerHTML,
+            //     oauthTemplate = Handlebars.compile(oauthSource),
+            //     oauthPlaceholder = document.getElementById('oauth');
 
             var params = getHashParams();
 
@@ -101,10 +133,10 @@
             } else {
                 if (access_token) {
                     // render oauth info
-                    oauthPlaceholder.innerHTML = oauthTemplate({
-                        access_token: access_token,
-                        refresh_token: refresh_token
-                    });
+                    // oauthPlaceholder.innerHTML = oauthTemplate({
+                    //     access_token: access_token,
+                    //     refresh_token: refresh_token
+                    // });
 
                     $.ajax({
                         url: 'https://api.spotify.com/v1/me/',
@@ -132,10 +164,11 @@
                         }
                     }).done(function(data) {
                         access_token = data.access_token;
-                        oauthPlaceholder.innerHTML = oauthTemplate({
-                            access_token: access_token,
-                            refresh_token: refresh_token
-                        });
+                        // oauthPlaceholder.innerHTML = oauthTemplate({
+                        //     access_token: access_token,
+                        //     refresh_token: refresh_token
+                        // });
+                        console.log("pushed")
                     });
                 }, false);
             }

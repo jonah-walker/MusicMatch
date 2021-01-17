@@ -56,13 +56,17 @@ const { link, promises } = require('fs');
 
 var client_id = '9667fe86430a494381408e97322a3bcb'; // Your client id
 var client_secret = '90433ff24ae8495c860b16131d6c826e'; // Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var redirect_uri = 'http://b31ec453b49f.ngrok.io/callback'; // Your redirect uri
 
 
 var userInfo = {
     genres: new List(),
     songIds: new List(),
+    songNames: new List(),
+    songImgs: new List(),
     artistIds: new List(),
+    artistNames: new List(),
+    artistImgs: new List(),
     userId: "",
     userName: "",
     href: "",
@@ -119,6 +123,17 @@ app.get('/login', function(req, res) {
         }));
 });
 
+app.get('/showinfo', function(req, res) {
+    // var doc = db.collection('users').doc('ffrosteh').get();
+    // if (!doc.exists) {
+    //     console.log('No such document!');
+    // } else {
+    //     console.log('Document data:', doc.data());
+    // }
+    res.redirect('http://b31ec453b49f.ngrok.io/yourinfo.html');
+    console.log("working");
+});
+
 app.get('/callback', function(req, res) {
 
     // your application requests refresh and access tokens
@@ -166,7 +181,7 @@ app.get('/callback', function(req, res) {
                     userInfo.userId = body.id
                     userInfo.href = body.external_urls.spotify
                     userInfo.userName = body.display_name
-                    //userInfo.userImage = body.images[0].url
+                        //userInfo.userImage = body.images[0].url
                     userInfo.country = body.country
                 });
 
@@ -179,8 +194,9 @@ app.get('/callback', function(req, res) {
                         //console.log(item.id)
                         //console.log(item.genres)
 
-                        // userInfo.genres.push(item.genres)
+                        userInfo.artistNames.push(item.name)
                         userInfo.artistIds.push(item.id)
+                        userInfo.artistImgs.push(item.images[0].url)
 
                         item.genres.forEach(function(genre) {
                             userInfo.genres.push(genre)
@@ -202,7 +218,10 @@ app.get('/callback', function(req, res) {
                         body.items.forEach(function(item) {
                             // console.log(item.name)
                             // console.log(item.id)
+                            userInfo.songNames.push(item.name)
                             userInfo.songIds.push(item.id)
+                            // console.log(item)
+                            userInfo.songImgs.push(item.album.images[0].url)
                         });
                         resolve("Success!") // Yay! Everything went well!
                     });
@@ -243,12 +262,16 @@ app.get('/callback', function(req, res) {
                         // console.log(userInfo)
 
                         console.log("testing 1")
-                        //const docRef = db.collection('users').doc('alovelace');
+                            //const docRef = db.collection('users').doc('alovelace');
 
                         db.collection('users').doc(userInfo.userId).set({
                             genres: userInfo.genres.toArray(),
                             songIds: userInfo.songIds.toArray(),
+                            songNames: userInfo.songNames.toArray(),
+                            songImgs: userInfo.songImgs.toArray(),
                             artistIds: userInfo.artistIds.toArray(),
+                            artistNames: userInfo.artistNames.toArray(),
+                            artistImgs: userInfo.artistImgs.toArray(),
                             userId: userInfo.userId,
                             userName: userInfo.userName,
                             href: userInfo.href,
