@@ -12,6 +12,30 @@ var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+
+// Firebase App (the core Firebase SDK) is always required and
+// must be listed before other Firebase SDKs
+var firebase = require("firebase/app");
+require('firebase/database');
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyABkUwLUIxlZUXkL0HwTXoAbWbMGn7cFAA",
+  authDomain: "spotifymatcher-a573d.firebaseapp.com",
+  databaseURL: "https://spotifymatcher-a573d-default-rtdb.firebaseio.com",
+  projectId: "spotifymatcher-a573d",
+  storageBucket: "spotifymatcher-a573d.appspot.com",
+  messagingSenderId: "228346491237",
+  appId: "1:228346491237:web:7d3775978d65cce2b7b18c",
+  measurementId: "G-45TGDE33XR"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+// Get a reference to the database service
+var database = firebase.database();
+
+
 const { link, promises } = require('fs');
 
 var client_id = '9667fe86430a494381408e97322a3bcb'; // Your client id
@@ -128,7 +152,7 @@ app.get('/callback', function(req, res) {
                     userInfo.userId = body.id
                     userInfo.href = body.external_urls.spotify
                     userInfo.userName = body.display_name
-                    userInfo.userImage = body.images[0].url
+                    //userInfo.userImage = body.images[0].url
                     userInfo.country = body.country
                 });
 
@@ -194,6 +218,23 @@ app.get('/callback', function(req, res) {
                         Promise.all(promises).then(() => resolve("Success"))
                     });
 
+                    function writeUserData(userId, name, email, imageUrl) {
+                        database.ref('response/').set({
+                            done: true,
+                            language: 0,
+                            topic: 1,
+                            platform: 2
+                        });
+                        
+                        console.log(1)
+                        // var adaNameRef = firebase.database().ref('users/ada/name');
+                        // adaNameRef.child('first').update('Ada');
+                        // adaNameRef.child('last').update('Lovelace');
+                        console.log(2)
+                        // We've written 'Ada' to the Database location storing Ada's first name,
+                        // and 'Lovelace' to the location storing her last name.
+                    }
+
                     mySecondPromise.then((successMessage) => {
 
 
@@ -205,6 +246,8 @@ app.get('/callback', function(req, res) {
                         userInfo.userValence /= nOfSongs
 
                         console.log(userInfo)
+
+                        writeUserData("0", "0", "0", "0")
                     });
 
 
