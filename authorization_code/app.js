@@ -56,7 +56,7 @@ const { link, promises } = require('fs');
 
 var client_id = '9667fe86430a494381408e97322a3bcb'; // Your client id
 var client_secret = '90433ff24ae8495c860b16131d6c826e'; // Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var redirect_uri = 'http://b9dd4d733b30.ngrok.io/callback'; // Your redirect uri
 
 
 var userInfo = {
@@ -166,7 +166,7 @@ app.get('/callback', function(req, res) {
                     userInfo.userId = body.id
                     userInfo.href = body.external_urls.spotify
                     userInfo.userName = body.display_name
-                    //userInfo.userImage = body.images[0].url
+                        //userInfo.userImage = body.images[0].url
                     userInfo.country = body.country
                 });
 
@@ -243,7 +243,7 @@ app.get('/callback', function(req, res) {
                         // console.log(userInfo)
 
                         console.log("testing 1")
-                        //const docRef = db.collection('users').doc('alovelace');
+                            //const docRef = db.collection('users').doc('alovelace');
 
                         db.collection('users').doc(userInfo.userId).set({
                             genres: userInfo.genres.toArray(),
