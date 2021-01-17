@@ -1,6 +1,6 @@
 {
   "author": "Spotify",
-  "name": "web-api-auth-examples",
+  "name": "vonaje",
   "description": "Basic examples of the Spotify authorization flows through OAuth 2",
   "version": "0.0.2",
   "dependencies": {
@@ -12,6 +12,8 @@
     "firebase": "^8.2.3",
     "firebase-admin": "^9.4.2",
     "lodash": "^4.17.15",
+    "moment": "^1.1.0",
+    "nexmo-client": "file:vonage-talk/nexmo-client",
     "node-sass": "^4.13.1",
     "querystring": "~0.2.0",
     "react": "^16.13.1",
@@ -43,5 +45,18 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "favicons-webpack-plugin": "^4.2.0",
+    "webpack-pwa-manifest": "^4.3.0"
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonah-walker/MusicMatch.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonah-walker/MusicMatch/issues"
+  },
+  "homepage": "https://github.com/jonah-walker/MusicMatch#readme"
 }
