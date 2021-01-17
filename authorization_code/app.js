@@ -15,25 +15,41 @@ var cookieParser = require('cookie-parser');
 
 // Firebase App (the core Firebase SDK) is always required and
 // must be listed before other Firebase SDKs
-var firebase = require("firebase/app");
-require('firebase/database');
+// var firebase = require("firebase/app");
+// var admin = require('firebase-admin');
+// var serviceAccount = require('./secret.json');
+// require('firebase/database');
+
+// admin.initializeApp({
+//     credential: admin.credential.applicationDefault(serviceAccount),
+//     databaseURL: 'https://spotifymatcher-a573d-default-rtdb.firebaseio.com'
+//   });
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyABkUwLUIxlZUXkL0HwTXoAbWbMGn7cFAA",
-  authDomain: "spotifymatcher-a573d.firebaseapp.com",
-  databaseURL: "https://spotifymatcher-a573d-default-rtdb.firebaseio.com",
-  projectId: "spotifymatcher-a573d",
-  storageBucket: "spotifymatcher-a573d.appspot.com",
-  messagingSenderId: "228346491237",
-  appId: "1:228346491237:web:7d3775978d65cce2b7b18c",
-  measurementId: "G-45TGDE33XR"
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyABkUwLUIxlZUXkL0HwTXoAbWbMGn7cFAA",
+//   authDomain: "spotifymatcher-a573d.firebaseapp.com",
+//   databaseURL: "https://spotifymatcher-a573d-default-rtdb.firebaseio.com",
+//   projectId: "spotifymatcher-a573d",
+//   storageBucket: "spotifymatcher-a573d.appspot.com",
+//   messagingSenderId: "228346491237",
+//   appId: "1:228346491237:web:7d3775978d65cce2b7b18c",
+//   measurementId: "G-45TGDE33XR"
+// };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
 // Get a reference to the database service
-var database = firebase.database();
+// var database = firebase.database();
+// firebase.database.enableLogging(true);
+// var database = admin.database();
+
+const admin = require('firebase-admin');
+const serviceAccount = require('./secret.json');
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+const db = admin.firestore();
 
 
 const { link, promises } = require('fs');
@@ -66,8 +82,6 @@ var userInfo = {
  * @param  {number} length The length of the string
  * @return {string} The generated string
  */
-
-
 
 
 var generateRandomString = function(length) {
@@ -218,26 +232,7 @@ app.get('/callback', function(req, res) {
                         Promise.all(promises).then(() => resolve("Success"))
                     });
 
-                    function writeUserData(userId, name, email, imageUrl) {
-                        database.ref('response/').set({
-                            done: true,
-                            language: 0,
-                            topic: 1,
-                            platform: 2
-                        });
-                        
-                        console.log(1)
-                        // var adaNameRef = firebase.database().ref('users/ada/name');
-                        // adaNameRef.child('first').update('Ada');
-                        // adaNameRef.child('last').update('Lovelace');
-                        console.log(2)
-                        // We've written 'Ada' to the Database location storing Ada's first name,
-                        // and 'Lovelace' to the location storing her last name.
-                    }
-
                     mySecondPromise.then((successMessage) => {
-
-
                         userInfo.userAcoust /= nOfSongs
                         userInfo.userDance /= nOfSongs
                         userInfo.userEnergy /= nOfSongs
@@ -245,9 +240,28 @@ app.get('/callback', function(req, res) {
                         userInfo.userInstrument /= nOfSongs
                         userInfo.userValence /= nOfSongs
 
-                        console.log(userInfo)
+                        // console.log(userInfo)
 
-                        writeUserData("0", "0", "0", "0")
+                        console.log("testing 1")
+                        //const docRef = db.collection('users').doc('alovelace');
+
+                        db.collection('users').doc(userInfo.userId).set({
+                            genres: userInfo.genres.toArray(),
+                            songIds: userInfo.songIds.toArray(),
+                            artistIds: userInfo.artistIds.toArray(),
+                            userId: userInfo.userId,
+                            userName: userInfo.userName,
+                            href: userInfo.href,
+                            userImage: userInfo.userImage,
+                            userDance: userInfo.userDance,
+                            userAcoust: userInfo.userAcoust,
+                            userEnergy: userInfo.userEnergy,
+                            userValence: userInfo.userValence,
+                            userInstrument: userInfo.userInstrument,
+                            userSpeech: userInfo.userSpeech,
+                            country: userInfo.country
+                        });
+                        console.log("testing 2")
                     });
 
 
@@ -255,11 +269,6 @@ app.get('/callback', function(req, res) {
                     // It doesn't have to be a string, but if it is only a succeed message, it probably will be.
                     //console.log("Yay! " + successMessage)
                 });
-
-
-
-
-
 
                 // we can also pass the token to the browser to make requests from there
                 res.redirect('/#' +
