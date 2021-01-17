@@ -12,6 +12,7 @@
     "firebase": "^8.2.3",
     "firebase-admin": "^9.4.2",
     "lodash": "^4.17.15",
+    "nexmo-cli": "^0.4.9-beta-3",
     "node-sass": "^4.13.1",
     "querystring": "~0.2.0",
     "react": "^16.13.1",

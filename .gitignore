@@ -103,3 +103,4 @@ dist
 # TernJS port file
 .tern-port
 authorization_code/secret.json
+authorization_code/functions/secret.json

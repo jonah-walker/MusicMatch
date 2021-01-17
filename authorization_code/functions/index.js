@@ -1,3 +1,14 @@
+const functions = require("firebase-functions");
+
+// // Create and Deploy Your First Cloud Functions
+// // https://firebase.google.com/docs/functions/write-firebase-functions
+//
+// exports.helloWorld = functions.https.onRequest((request, response) => {
+//   functions.logger.info("Hello logs!", {structuredData: true});
+//   response.send("Hello from Firebase!");
+// });
+
+
 /**
  * This is an example of a basic node.js script that performs
  * the Authorization Code oAuth2 flow to authenticate against
@@ -46,19 +57,6 @@ var cookieParser = require('cookie-parser');
 
 const admin = require('firebase-admin');
 const serviceAccount = require('./secret.json');
-// const serviceAccount = {
-//     "type": process.env.type,
-//     "project_id": process.env.project_id,
-//     "private_key_id": process.env.private_key_id,
-//     "private_key": process.env.private_key.replace(/\\n/g, '\n'),
-//     "client_email": process.env.client_email,
-//     "client_id": process.env.client_id,
-//     "auth_uri": process.env.auth_uri,
-//     "token_uri": process.env.token_uri,
-//     "auth_provider_x509_cert_url": process.env.auth_provider_x509_cert_url,
-//     "client_x509_cert_url": process.env.client_x509_cert_url
-// }
-
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
@@ -69,7 +67,7 @@ const { link, promises } = require('fs');
 
 var client_id = '9667fe86430a494381408e97322a3bcb'; // Your client id
 var client_secret = '90433ff24ae8495c860b16131d6c826e'; // Your secret
-var redirect_uri = 'https://jonahlwalker.com/'; // Your redirect uri
+var redirect_uri = 'https://jonahlwalker.com'; // Your redirect uri
 
 
 var userInfo = {
@@ -323,10 +321,5 @@ app.get('/refresh_token', function(req, res) {
     });
 });
 
-// console.log('Listening on 8888');
+console.log('Listening on 8888');
 app.listen(8888);
-// let port = process.env.PORT;
-// if (port == null || port == "") {
-//   port = 8000;
-// }
-// app.listen(port);
